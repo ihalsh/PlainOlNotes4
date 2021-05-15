@@ -15,6 +15,7 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
+    private lateinit var notesListAdapter: NoteListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,10 +28,13 @@ class MainFragment : Fragment() {
             setHasFixedSize(true)
             val divider = DividerItemDecoration(context, LinearLayoutManager(context).orientation)
             addItemDecoration(divider)
+            layoutManager = LinearLayoutManager(activity)
         }
 
         viewModel.notesList.observe(viewLifecycleOwner) {
             Timber.tag("SampleNoteList").d(it.toString())
+            notesListAdapter = NoteListAdapter(it)
+            binding.recyclerView.adapter = notesListAdapter
         }
 
         return binding.root
