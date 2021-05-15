@@ -4,11 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.plainolnotes4.NoteListAdapter.ViewHolder
+import com.example.plainolnotes4.NotesListAdapter.ViewHolder
 import com.example.plainolnotes4.data.NoteEntity
 import com.example.plainolnotes4.databinding.ListItemBinding
 
-class NoteListAdapter(private val dataSet: List<NoteEntity>) :
+class NotesListAdapter(private val dataSet: List<NoteEntity>) :
     RecyclerView.Adapter<ViewHolder>() {
 
     // Create new views (invoked by the layout manager)

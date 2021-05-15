@@ -15,7 +15,7 @@ class MainFragment : Fragment() {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
-    private lateinit var notesListAdapter: NoteListAdapter
+    private lateinit var notesListAdapter: NotesListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +33,7 @@ class MainFragment : Fragment() {
 
         viewModel.notesList.observe(viewLifecycleOwner) {
             Timber.tag("SampleNoteList").d(it.toString())
-            notesListAdapter = NoteListAdapter(it)
+            notesListAdapter = NotesListAdapter(it)
             binding.recyclerView.adapter = notesListAdapter
         }
 

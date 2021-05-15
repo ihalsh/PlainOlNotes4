@@ -5,4 +5,5 @@
     <string name="sample_note_2">Sample note/n with line feed</string>
     <string name="sample_note_3">Quisque at vestibulum lacus. Aenean vel pharetra urna. Ut ac ultrices tortor. Aenean porttitor molestie egestas. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam eget congue ligula, at condimentum augue. Praesent auctor leo vitae sapien iaculis, eu laoreet nunc interdum.
 Cras nec egestas elit. Sed vestibulum augue sit amet leo volutpat sodales. Etiam nec hendrerit mi. Ut ut tincidunt mauris, sed ullamcorper nibh. Vestibulum eu lobortis libero. Pellentesque ornare sapien non pharetra venenatis. Nullam ultrices varius ligula, ac gravida turpis hendrerit at. Maecenas luctus at turpis non faucibus. Nunc laoreet malesuada lorem, sed ultricies odio rhoncus quis.</string>
+    <string name="enter_a_note">Enter a note</string>
 </resources>
