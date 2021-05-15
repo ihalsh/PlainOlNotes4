@@ -1,6 +1,10 @@
 package com.example.plainolnotes4.data
 
+import android.content.Context
+import com.example.plainolnotes4.R
 import java.util.*
+
+const val NEW_NOTE_ID: Int = 0
 
 data class NoteEntity(
     var id: Int,
@@ -11,6 +15,14 @@ data class NoteEntity(
     constructor(date: Date, text: String) : this(NEW_NOTE_ID, date, text)
 
     companion object {
-        const val NEW_NOTE_ID: Int = 0
+        fun getSampleNoteList(context: Context): List<NoteEntity> {
+            fun getDate(diff: Long = 0): Date = Date(Date().time + diff)
+
+            return arrayListOf(
+                NoteEntity(1, getDate(), context.getString(R.string.sample_note_1)),
+                NoteEntity(2, getDate(1), context.getString(R.string.sample_note_2)),
+                NoteEntity(3, getDate(2), context.getString(R.string.sample_note_3))
+            )
+        }
     }
 }
