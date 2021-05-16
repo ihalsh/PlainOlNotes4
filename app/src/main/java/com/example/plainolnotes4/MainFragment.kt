@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plainolnotes4.databinding.MainFragmentBinding
@@ -42,5 +43,7 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     override fun onItemClick(id: Int) {
         Timber.tag("CL").d("Clicked on item $id")
+        val action = MainFragmentDirections.actionEditNote(id)
+        findNavController().navigate(action)
     }
 }
