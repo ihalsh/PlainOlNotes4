@@ -8,7 +8,10 @@ import com.example.plainolnotes4.NotesListAdapter.ViewHolder
 import com.example.plainolnotes4.data.NoteEntity
 import com.example.plainolnotes4.databinding.ListItemBinding
 
-class NotesListAdapter(private val dataSet: List<NoteEntity>) :
+class NotesListAdapter(
+    private val dataSet: List<NoteEntity>,
+    private val listener: ItemClickListener
+) :
     RecyclerView.Adapter<ViewHolder>() {
 
     // Create new views (invoked by the layout manager)
@@ -27,8 +30,12 @@ class NotesListAdapter(private val dataSet: List<NoteEntity>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
+        val note = dataSet[position]
         with(holder.binding) {
-            noteText.text = dataSet[position].text
+            noteText.text = note.text
+            root.setOnClickListener {
+                listener.onItemClick(note.id)
+            }
         }
     }
 
@@ -41,5 +48,9 @@ class NotesListAdapter(private val dataSet: List<NoteEntity>) :
      */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val binding: ListItemBinding = ListItemBinding.bind(view)
+    }
+
+    interface ItemClickListener {
+        fun onItemClick(id: Int)
     }
 }

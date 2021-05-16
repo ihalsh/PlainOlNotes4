@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plainolnotes4.databinding.MainFragmentBinding
 import timber.log.Timber
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
@@ -33,10 +33,14 @@ class MainFragment : Fragment() {
 
         viewModel.notesList.observe(viewLifecycleOwner) {
             Timber.tag("SampleNoteList").d(it.toString())
-            notesListAdapter = NotesListAdapter(it)
+            notesListAdapter = NotesListAdapter(it, this@MainFragment)
             binding.recyclerView.adapter = notesListAdapter
         }
 
         return binding.root
+    }
+
+    override fun onItemClick(id: Int) {
+        Timber.tag("CL").d("Clicked on item $id")
     }
 }
