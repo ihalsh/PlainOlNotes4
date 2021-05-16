@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -22,6 +23,10 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        (activity as AppCompatActivity)
+            .supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = MainFragmentBinding.inflate(inflater, container, false)
 
