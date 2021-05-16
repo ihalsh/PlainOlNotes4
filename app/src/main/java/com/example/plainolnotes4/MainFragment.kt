@@ -23,7 +23,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         (activity as AppCompatActivity)
             .supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
@@ -38,7 +37,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         }
 
         viewModel.notesList.observe(viewLifecycleOwner) {
-            Timber.tag("SampleNoteList").d(it.toString())
             notesListAdapter = NotesListAdapter(it, this@MainFragment)
             binding.recyclerView.adapter = notesListAdapter
         }
