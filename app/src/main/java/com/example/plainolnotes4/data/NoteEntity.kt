@@ -1,12 +1,16 @@
 package com.example.plainolnotes4.data
 
 import android.content.Context
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.example.plainolnotes4.R
 import java.util.*
 
 const val NEW_NOTE_ID: Int = 0
 
+@Entity(tableName = "notes")
 data class NoteEntity(
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     var date: Date,
     var text: String
