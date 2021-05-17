@@ -4,5 +4,5 @@
 
     <item
         android:id="@+id/main_fragment_menu"
-        android:title="@string/add_new_note" />
+        android:title="@string/add_sample_data" />
 </menu>

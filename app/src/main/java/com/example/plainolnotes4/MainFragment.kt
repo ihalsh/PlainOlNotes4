@@ -5,13 +5,15 @@ import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.plainolnotes4.data.NoteEntity
 import com.example.plainolnotes4.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import timber.log.Timber
-
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
@@ -37,7 +39,7 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
             layoutManager = LinearLayoutManager(activity)
         }
 
-        viewModel.notesList.observe(viewLifecycleOwner) {
+        viewModel.notesList?.observe(viewLifecycleOwner) {
             notesListAdapter = NotesListAdapter(it, this@MainFragment)
             binding.recyclerView.adapter = notesListAdapter
         }
@@ -56,20 +58,24 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         }
     }
 
+    override fun onItemClick(id: Int) {
+        val action = MainFragmentDirections.actionEditNote(id)
+        findNavController().navigate(action)
+    }
+
     private fun addSampleData(): Boolean {
-        Snackbar
-            .make(
-                requireView(),
-                "Add new note clicked",
-                Snackbar.LENGTH_SHORT
-            )
-            .show()
+        viewModel.addSampleData()
+        showSnackbar("Sample data added.")
         return true
     }
 
-    override fun onItemClick(id: Int) {
-        Timber.tag("CL").d("Clicked on item $id")
-        val action = MainFragmentDirections.actionEditNote(id)
-        findNavController().navigate(action)
+    private fun showSnackbar(text: String) {
+        Snackbar
+            .make(
+                requireView(),
+                text,
+                Snackbar.LENGTH_SHORT
+            )
+            .show()
     }
 }

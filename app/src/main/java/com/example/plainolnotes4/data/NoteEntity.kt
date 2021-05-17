@@ -23,9 +23,9 @@ data class NoteEntity(
             fun getDate(diff: Long = 0): Date = Date(Date().time + diff)
 
             return arrayListOf(
-                NoteEntity(1, getDate(), context.getString(R.string.sample_note_1)),
-                NoteEntity(2, getDate(1), context.getString(R.string.sample_note_2)),
-                NoteEntity(3, getDate(2), context.getString(R.string.sample_note_3))
+                NoteEntity(getDate(), context.getString(R.string.sample_note_1)),
+                NoteEntity(getDate(1), context.getString(R.string.sample_note_2)),
+                NoteEntity(getDate(2), context.getString(R.string.sample_note_3))
             )
         }
     }
