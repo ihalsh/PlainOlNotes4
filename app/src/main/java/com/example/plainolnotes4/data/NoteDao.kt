@@ -22,5 +22,8 @@ interface NoteDao {
     fun getCount(): Int
 
     @Delete
-    fun deleteAll(list: List<NoteEntity>): Int
+    fun deleteMultipleNotes(list: List<NoteEntity>): Int
+
+    @Query("DELETE FROM notes")
+    fun deleteAllNotes(): Int
 }

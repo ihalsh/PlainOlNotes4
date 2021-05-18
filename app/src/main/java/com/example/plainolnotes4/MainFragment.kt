@@ -54,17 +54,27 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.main_fragment_menu -> addSampleData()
-            R.id.delete_menu -> deleteNotes(adapter.selectedNotes)
+            R.id.add_sample_data -> addSampleData()
+            R.id.delete_note -> deleteMultipleNotes(adapter.selectedNotes)
+            R.id.delete_all_notes -> deleteAllNotes()
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    private fun deleteNotes(list: List<NoteEntity>): Boolean {
+    private fun deleteAllNotes(): Boolean {
+        showSnackbar("${viewModel.deleteAllNotes()} items deleted.")
+        return true
+    }
+
+    private fun deleteMultipleNotes(list: List<NoteEntity>): Boolean {
         showSnackbar("${viewModel.deleteNotes(list)} items deleted.")
+        updateMenu()
+        return true
+    }
+
+    private fun updateMenu() {
         adapter.selectedNotes.clear()
         onItemSelectionChanged()
-        return true
     }
 
     override fun onItemClick(id: Int) {

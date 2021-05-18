@@ -23,7 +23,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun deleteNotes(list: List<NoteEntity>): Int {
         val deletedNotesQty = viewModelScope.async(Dispatchers.IO) {
-            noteDao?.deleteAll(list) ?: 0
+            noteDao?.deleteMultipleNotes(list) ?: 0
+        }
+
+        return runBlocking(Dispatchers.Default) { deletedNotesQty.await() }
+    }
+
+    fun deleteAllNotes(): Int {
+        val deletedNotesQty = viewModelScope.async(Dispatchers.IO) {
+            noteDao?.deleteAllNotes() ?: 0
         }
 
         return runBlocking(Dispatchers.Default) { deletedNotesQty.await() }
