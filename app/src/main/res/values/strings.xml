@@ -8,4 +8,5 @@
 Cras nec egestas elit. Sed vestibulum augue sit amet leo volutpat sodales. Etiam nec hendrerit mi. Ut ut tincidunt mauris, sed ullamcorper nibh. Vestibulum eu lobortis libero. Pellentesque ornare sapien non pharetra venenatis. Nullam ultrices varius ligula, ac gravida turpis hendrerit at. Maecenas luctus at turpis non faucibus. Nunc laoreet malesuada lorem, sed ultricies odio rhoncus quis.</string>
     <string name="enter_a_note">Enter a note</string>
     <string name="add_sample_data">Add samle data</string>
+    <string name="delete">Delete item(s)</string>
 </resources>

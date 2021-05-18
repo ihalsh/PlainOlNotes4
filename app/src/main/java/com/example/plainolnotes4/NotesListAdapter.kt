@@ -11,8 +11,9 @@ import com.example.plainolnotes4.databinding.ListItemBinding
 class NotesListAdapter(
     private val dataSet: List<NoteEntity>,
     private val listener: ItemClickListener
-) :
-    RecyclerView.Adapter<ViewHolder>() {
+) : RecyclerView.Adapter<ViewHolder>() {
+
+    val selectedNotes = mutableListOf<NoteEntity>()
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +37,22 @@ class NotesListAdapter(
             root.setOnClickListener {
                 listener.onItemClick(note.id)
             }
+            fab.setOnClickListener {
+                if (selectedNotes.contains(note)) {
+                    selectedNotes.remove(note)
+                    fab.setImageResource(R.drawable.ic_note)
+                } else {
+                    selectedNotes.add(note)
+                    fab.setImageResource(R.drawable.ic_check)
+                }
+                listener.onItemSelectionChanged()
+            }
+            fab.setImageResource(
+                when {
+                    selectedNotes.contains(note) -> R.drawable.ic_check
+                    else -> R.drawable.ic_note
+                }
+            )
         }
     }
 
@@ -52,5 +69,6 @@ class NotesListAdapter(
 
     interface ItemClickListener {
         fun onItemClick(id: Int)
+        fun onItemSelectionChanged()
     }
 }
