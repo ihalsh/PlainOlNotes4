@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.plainolnotes4.data.NoteEntity
 import com.example.plainolnotes4.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 
@@ -54,8 +55,16 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.main_fragment_menu -> addSampleData()
+            R.id.delete_menu -> deleteNotes(adapter.selectedNotes)
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    private fun deleteNotes(list: List<NoteEntity>): Boolean {
+        showSnackbar("${viewModel.deleteNotes(list)} items deleted.")
+        adapter.selectedNotes.clear()
+        onItemSelectionChanged()
+        return true
     }
 
     override fun onItemClick(id: Int) {
@@ -64,7 +73,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     }
 
     override fun onItemSelectionChanged() {
-        showSnackbar("Menu state changed.")
         requireActivity().invalidateOptionsMenu()
     }
 
