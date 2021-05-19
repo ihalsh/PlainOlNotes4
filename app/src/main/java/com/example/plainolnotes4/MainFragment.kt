@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
 const val NEW_NOTE_ID = 0
+const val SELECTED_LIST_KEY = "SelectionListKey"
 
 class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
@@ -58,7 +59,13 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
             noteListSize = it.size// Should always stays BEFORE adapter!
             adapter = NotesListAdapter(it, this@MainFragment)
             binding.recyclerView.adapter = adapter
-            updateMenu()
+            if (null != savedInstanceState && !savedInstanceState.isEmpty) {
+                adapter.selectedNotes.addAll(
+                    savedInstanceState.getParcelableArrayList(SELECTED_LIST_KEY) ?: emptyList()
+                )
+                savedInstanceState.clear()
+            }
+            onItemSelectionChanged()
         }
         return binding.root
     }
@@ -90,11 +97,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         return true
     }
 
-    private fun updateMenu() {
-        adapter.selectedNotes.clear()
-        onItemSelectionChanged()
-    }
-
     override fun onItemClick(id: Int) {
         val action = MainFragmentDirections.actionEditNote(id)
         findNavController().navigate(action)
@@ -117,5 +119,12 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
                 Snackbar.LENGTH_SHORT
             )
             .show()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        if (this::adapter.isInitialized) {
+            outState.putParcelableArrayList(SELECTED_LIST_KEY, adapter.selectedNotes)
+        }
+        super.onSaveInstanceState(outState)
     }
 }

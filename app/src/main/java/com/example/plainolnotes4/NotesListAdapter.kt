@@ -13,7 +13,7 @@ class NotesListAdapter(
     private val listener: ItemClickListener
 ) : RecyclerView.Adapter<ViewHolder>() {
 
-    val selectedNotes = mutableListOf<NoteEntity>()
+    val selectedNotes = arrayListOf<NoteEntity>()
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
