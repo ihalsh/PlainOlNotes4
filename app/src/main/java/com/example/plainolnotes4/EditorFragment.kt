@@ -35,6 +35,13 @@ class EditorFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
+        requireActivity().title =
+            if (args.noteId == NEW_NOTE_ID) {
+                getString(R.string.add_new_note)
+            } else {
+                getString(R.string.edit_note)
+            }
+
         binding = EditorFragmentBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
         viewModel.getNoteById(args.noteId)

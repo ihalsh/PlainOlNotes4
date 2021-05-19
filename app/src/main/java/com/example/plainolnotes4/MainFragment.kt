@@ -13,6 +13,8 @@ import com.example.plainolnotes4.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
 import kotlin.properties.Delegates
 
+const val NEW_NOTE_ID = 0
+
 class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     private lateinit var viewModel: MainViewModel
@@ -33,7 +35,10 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     ): View {
         (activity as AppCompatActivity)
             .supportActionBar?.setDisplayHomeAsUpEnabled(false)
+
         setHasOptionsMenu(true)
+
+        requireActivity().title = getString(R.string.app_name)
 
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = MainFragmentBinding.inflate(inflater, container, false)
@@ -43,6 +48,10 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
             val divider = DividerItemDecoration(context, LinearLayoutManager(context).orientation)
             addItemDecoration(divider)
             layoutManager = LinearLayoutManager(activity)
+        }
+
+        binding.addNewNoteButton.setOnClickListener {
+            onItemClick(NEW_NOTE_ID)
         }
 
         viewModel.notesList?.observe(viewLifecycleOwner) {

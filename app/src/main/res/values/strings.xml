@@ -10,4 +10,6 @@ Cras nec egestas elit. Sed vestibulum augue sit amet leo volutpat sodales. Etiam
     <string name="add_sample_data">Add sample data</string>
     <string name="delete_all_notes">Delete all notes</string>
     <string name="delete">Delete item(s)</string>
+    <string name="add_new_note">Add new note</string>
+    <string name="edit_note">Edit note</string>
 </resources>
