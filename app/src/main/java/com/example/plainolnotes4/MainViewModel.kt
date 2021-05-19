@@ -7,12 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.plainolnotes4.data.AppDatabase
 import com.example.plainolnotes4.data.NoteEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
-    val noteDao = AppDatabase.getInstance(application)?.noteDao()
+    private val noteDao = AppDatabase.getInstance(application)?.noteDao()
     val notesList: LiveData<List<NoteEntity>>? = noteDao?.getAll()
 
     fun addSampleData() {
@@ -21,19 +19,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun deleteNotes(list: List<NoteEntity>): Int {
-        val deletedNotesQty = viewModelScope.async(Dispatchers.IO) {
-            noteDao?.deleteMultipleNotes(list) ?: 0
+    fun deleteMultipleNotes(list: List<NoteEntity>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteDao?.deleteMultipleNotes(list)
         }
-
-        return runBlocking(Dispatchers.Default) { deletedNotesQty.await() }
     }
 
-    fun deleteAllNotes(): Int {
-        val deletedNotesQty = viewModelScope.async(Dispatchers.IO) {
-            noteDao?.deleteAllNotes() ?: 0
+    fun deleteAllNotes() {
+        viewModelScope.launch(Dispatchers.IO) {
+            noteDao?.deleteAllNotes()
         }
-
-        return runBlocking(Dispatchers.Default) { deletedNotesQty.await() }
     }
 }

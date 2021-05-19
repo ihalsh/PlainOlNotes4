@@ -1,7 +1,32 @@
 package com.example.plainolnotes4
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.example.plainolnotes4.data.AppDatabase
+import com.example.plainolnotes4.data.NoteEntity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class EditorViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class EditorViewModel(application: Application) : AndroidViewModel(application) {
+    private val noteDao = AppDatabase.getInstance(application)?.noteDao()
+    private val _currentNote = MutableLiveData<NoteEntity>()
+    val currentNote: LiveData<NoteEntity> = _currentNote
+
+    fun getNoteById(noteId: Int) {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                val note =
+                    if (noteId != 0) {
+                        noteDao?.getNoteById(noteId)
+                    } else {
+                        NoteEntity()
+                    }
+                _currentNote.postValue(note ?: NoteEntity())
+            }
+        }
+    }
 }

@@ -11,12 +11,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plainolnotes4.data.NoteEntity
 import com.example.plainolnotes4.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
+import kotlin.properties.Delegates
 
 class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
     private lateinit var adapter: NotesListAdapter
+    private var noteListSize: Int by Delegates.observable(0) { _, old, new ->
+        if (this::adapter.isInitialized) {
+            (new - old).let { diff ->
+                if (diff < 0) showSnackbar("${-diff} item(s) deleted.")
+                if (diff > 0) showSnackbar("$diff item(s) added.")
+            }
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,10 +46,11 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         }
 
         viewModel.notesList?.observe(viewLifecycleOwner) {
+            noteListSize = it.size// Should always stays BEFORE adapter!
             adapter = NotesListAdapter(it, this@MainFragment)
             binding.recyclerView.adapter = adapter
+            updateMenu()
         }
-
         return binding.root
     }
 
@@ -62,13 +72,12 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     }
 
     private fun deleteAllNotes(): Boolean {
-        showSnackbar("${viewModel.deleteAllNotes()} items deleted.")
+        viewModel.deleteAllNotes()
         return true
     }
 
     private fun deleteMultipleNotes(list: List<NoteEntity>): Boolean {
-        showSnackbar("${viewModel.deleteNotes(list)} items deleted.")
-        updateMenu()
+        viewModel.deleteMultipleNotes(list)
         return true
     }
 
@@ -88,7 +97,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
     private fun addSampleData(): Boolean {
         viewModel.addSampleData()
-        showSnackbar("Sample data added.")
         return true
     }
 

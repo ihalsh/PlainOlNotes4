@@ -34,8 +34,11 @@ class EditorFragment : Fragment() {
         setHasOptionsMenu(true)
 
         binding = EditorFragmentBinding.inflate(inflater, container, false)
-        val text = getString(R.string.you_have_clicked).format(args.noteId)
-        binding.editor.setText(text)
+        viewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
+        viewModel.getNoteById(args.noteId)
+        viewModel.currentNote.observe(viewLifecycleOwner) {
+            binding.editor.setText(it.text)
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(
             viewLifecycleOwner,
@@ -47,11 +50,6 @@ class EditorFragment : Fragment() {
         )
 
         return binding.root
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
