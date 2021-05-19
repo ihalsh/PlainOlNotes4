@@ -2,7 +2,6 @@ package com.example.plainolnotes4
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.plainolnotes4.data.AppDatabase
@@ -13,8 +12,7 @@ import kotlinx.coroutines.withContext
 
 class EditorViewModel(application: Application) : AndroidViewModel(application) {
     private val noteDao = AppDatabase.getInstance(application)?.noteDao()
-    private val _currentNote = MutableLiveData<NoteEntity>()
-    val currentNote: LiveData<NoteEntity> = _currentNote
+    val currentNote = MutableLiveData<NoteEntity>()
 
     fun getNoteById(noteId: Int) {
         viewModelScope.launch {
@@ -25,7 +23,25 @@ class EditorViewModel(application: Application) : AndroidViewModel(application) 
                     } else {
                         NoteEntity()
                     }
-                _currentNote.postValue(note ?: NoteEntity())
+                currentNote.postValue(note ?: NoteEntity())
+            }
+        }
+    }
+
+    fun updateCurrentNote() {
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                currentNote.value?.let {
+                    if (it.id != 0) {
+                        if (it.text.isEmpty()) {
+                            noteDao?.deleteSingleNote(it)
+                        } else {
+                            noteDao?.insertNote(it)
+                        }
+                    } else if (it.text.isNotEmpty()) {
+                        noteDao?.insertNote(it)
+                    }
+                }
             }
         }
     }
