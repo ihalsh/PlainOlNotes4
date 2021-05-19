@@ -15,8 +15,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.plainolnotes4.databinding.EditorFragmentBinding
 
-class EditorFragment : Fragment() {
+const val TEXT_KEY = "TextKey"
+const val CURSOR_POSITION_KEY = "CursorPositionKey"
 
+class EditorFragment : Fragment() {
     private lateinit var viewModel: EditorViewModel
     private val args: EditorFragmentArgs by navArgs()
     private lateinit var binding: EditorFragmentBinding
@@ -46,7 +48,10 @@ class EditorFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
         viewModel.getNoteById(args.noteId)
         viewModel.currentNote.observe(viewLifecycleOwner) {
-            binding.editor.setText(it.text)
+            val savedText = savedInstanceState?.getString(TEXT_KEY)
+            val savedCursorPosition = savedInstanceState?.getInt(CURSOR_POSITION_KEY) ?: 0
+            binding.editor.setText(savedText ?: it.text)
+            binding.editor.setSelection(savedCursorPosition)
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -80,5 +85,12 @@ class EditorFragment : Fragment() {
 
         findNavController().navigateUp()
         return true
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        with(binding.editor) {
+            outState.putString(TEXT_KEY, text.toString())
+            outState.putInt(CURSOR_POSITION_KEY, selectionStart)
+        }
     }
 }
