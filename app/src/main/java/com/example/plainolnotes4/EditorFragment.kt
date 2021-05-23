@@ -11,9 +11,11 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.plainolnotes4.databinding.EditorFragmentBinding
+import kotlinx.coroutines.flow.collect
 
 const val TEXT_KEY = "TextKey"
 const val CURSOR_POSITION_KEY = "CursorPositionKey"
@@ -47,11 +49,14 @@ class EditorFragment : Fragment() {
         binding = EditorFragmentBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(EditorViewModel::class.java)
         viewModel.getNoteById(args.noteId)
-        viewModel.currentNote.observe(viewLifecycleOwner) {
-            val savedText = savedInstanceState?.getString(TEXT_KEY)
-            val savedCursorPosition = savedInstanceState?.getInt(CURSOR_POSITION_KEY) ?: 0
-            binding.editor.setText(savedText ?: it.text)
-            binding.editor.setSelection(savedCursorPosition)
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.currentNote.collect {
+                val savedText = savedInstanceState?.getString(TEXT_KEY)
+                val savedCursorPosition = savedInstanceState?.getInt(CURSOR_POSITION_KEY) ?: 0
+                binding.editor.setText(savedText ?: it.text)
+                binding.editor.setSelection(savedCursorPosition)
+            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -71,14 +76,12 @@ class EditorFragment : Fragment() {
             android.R.id.home -> saveAndReturn()
             else -> super.onOptionsItemSelected(item)
         }
-
     }
 
     private fun saveAndReturn(): Boolean {
         val imm = requireActivity()
             .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
-
 
         viewModel.currentNote.value?.text = binding.editor.text.toString().trim()
         viewModel.updateCurrentNote()

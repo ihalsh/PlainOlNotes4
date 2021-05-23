@@ -24,11 +24,15 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
     private lateinit var adapter: NotesListAdapter
-    private var noteListSize: Int by Delegates.observable(0) { _, old, new ->
+    private var newListSize: Int by Delegates.observable(0) { _, old, new ->
         if (this::adapter.isInitialized) {
             (new - old).let { diff ->
-                if (diff < 0) showSnackbar("${-diff} item(s) deleted.")
-                if (diff > 0) showSnackbar("$diff item(s) added.")
+                if (diff < 0) {
+                    showSnackbar("${-diff} item(s) deleted.")
+                }
+                if (diff > 0) {
+                    showSnackbar("$diff item(s) added.")
+                }
             }
         }
     }
@@ -61,8 +65,12 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
         lifecycleScope.launchWhenCreated {
             viewModel.notesList?.collect { list ->
-                noteListSize = list.size// Should always stays BEFORE adapter!
-                adapter = NotesListAdapter(list, this@MainFragment)
+                newListSize = list.size// Should always stays BEFORE adapter initialization!
+                if (!this@MainFragment::adapter.isInitialized) {
+                    adapter = NotesListAdapter(this@MainFragment)
+                }
+                adapter.submitList(list)
+                adapter.selectedNotes.clear()
                 binding.recyclerView.adapter = adapter
                 if (null != savedInstanceState && !savedInstanceState.isEmpty) {
                     adapter.selectedNotes.addAll(
@@ -78,7 +86,7 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (this::adapter.isInitialized && adapter.selectedNotes.isNotEmpty()) {
+        if (this::adapter.isInitialized && adapter.selectedNotes.size > 0) {
             inflater.inflate(R.menu.main_menu_items_selected, menu)
         } else {
             inflater.inflate(R.menu.main_menu, menu)
