@@ -1,7 +1,7 @@
 package com.example.plainolnotes4.data
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NoteDao {
@@ -13,7 +13,8 @@ interface NoteDao {
     fun insertAll(notes: List<NoteEntity>)
 
     @Query("SELECT * FROM notes ORDER BY date ASC")
-    fun getAll(): LiveData<List<NoteEntity>>
+//    fun getAll(): LiveData<List<NoteEntity>>
+    fun getAll(): Flow<List<NoteEntity>>
 
     @Query("SELECT * FROM notes WHERE id = :id")
     fun getNoteById(id: Int): NoteEntity?
