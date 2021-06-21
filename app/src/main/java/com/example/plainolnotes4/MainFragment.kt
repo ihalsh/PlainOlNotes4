@@ -4,28 +4,32 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plainolnotes4.data.NoteEntity
+import com.example.plainolnotes4.data.NoteEntityItem
+import com.example.plainolnotes4.data.toNoteEntityItem
 import com.example.plainolnotes4.databinding.MainFragmentBinding
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.InternalCoroutinesApi
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieViewHolder
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 const val NEW_NOTE_ID = 0
 const val SELECTED_LIST_KEY = "SelectionListKey"
 
-class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
+class MainFragment : Fragment(), NoteEntityItem.ItemClickListener {
 
     private lateinit var viewModel: MainViewModel
     private lateinit var binding: MainFragmentBinding
-    private lateinit var adapter: NotesListAdapter
+    private lateinit var groupAdapter: GroupAdapter<GroupieViewHolder>
     private var newListSize: Int by Delegates.observable(0) { _, old, new ->
-        if (this::adapter.isInitialized) {
+        if (this::groupAdapter.isInitialized) {
             (new - old).let { diff ->
                 if (diff < 0) {
                     showSnackbar("${-diff} item(s) deleted.")
@@ -36,12 +40,46 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
             }
         }
     }
+    private val selectedNotes = arrayListOf<NoteEntity>()
 
-    @InternalCoroutinesApi
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Timber.d("onCreate.")
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        lifecycleScope.launch {
+            viewModel.notesList?.collect { list ->
+                newListSize = list.size// should always stays BEFORE adapter initialization!
+                when (::groupAdapter.isInitialized) {
+                    false -> {
+                        Timber.d("Create adapter.")
+                        groupAdapter = GroupAdapter<GroupieViewHolder>().apply {
+                            addAll(list.toNoteEntityItem(this@MainFragment))
+                        }
+                        binding.recyclerView.adapter = groupAdapter
+                    }
+                    true -> {
+                        Timber.d("Update adapter.")
+                        groupAdapter.update(list.toNoteEntityItem(this@MainFragment))
+                    }
+                }
+                selectedNotes.clear()
+                if (null != savedInstanceState && savedInstanceState.isEmpty.not()) {
+                    selectedNotes.addAll(
+                        savedInstanceState.getParcelableArrayList(SELECTED_LIST_KEY) ?: emptyList()
+                    )
+                    savedInstanceState.clear()
+                }
+                onItemSelectionChanged()
+            }
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Timber.d("onCreateView.")
         (activity as AppCompatActivity)
             .supportActionBar?.setDisplayHomeAsUpEnabled(false)
 
@@ -49,7 +87,6 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
 
         requireActivity().title = getString(R.string.app_name)
 
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         binding = MainFragmentBinding.inflate(inflater, container, false)
 
         with(binding.recyclerView) {
@@ -63,30 +100,16 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
             onItemClick(NEW_NOTE_ID)
         }
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.notesList?.collect { list ->
-                newListSize = list.size// Should always stays BEFORE adapter initialization!
-                if (!this@MainFragment::adapter.isInitialized) {
-                    adapter = NotesListAdapter(this@MainFragment)
-                }
-                adapter.submitList(list)
-                adapter.selectedNotes.clear()
-                binding.recyclerView.adapter = adapter
-                if (null != savedInstanceState && !savedInstanceState.isEmpty) {
-                    adapter.selectedNotes.addAll(
-                        savedInstanceState.getParcelableArrayList(SELECTED_LIST_KEY) ?: emptyList()
-                    )
-                    savedInstanceState.clear()
-                }
-                onItemSelectionChanged()
-            }
+        //Necessary to process returning to MainFragment after empty note creation
+        if (::groupAdapter.isInitialized && null == binding.recyclerView.adapter) {
+            binding.recyclerView.adapter = groupAdapter
         }
 
         return binding.root
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (this::adapter.isInitialized && adapter.selectedNotes.size > 0) {
+        if (::groupAdapter.isInitialized && selectedNotes.size > 0) {
             inflater.inflate(R.menu.main_menu_items_selected, menu)
         } else {
             inflater.inflate(R.menu.main_menu, menu)
@@ -96,7 +119,7 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.add_sample_data -> addSampleData()
-            R.id.delete_note -> deleteMultipleNotes(adapter.selectedNotes)
+            R.id.delete_note -> deleteMultipleNotes(selectedNotes)
             R.id.delete_all_notes -> deleteAllNotes()
             else -> super.onOptionsItemSelected(item)
         }
@@ -121,6 +144,16 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
         requireActivity().invalidateOptionsMenu()
     }
 
+    override fun isSelected(note: NoteEntity): Boolean = selectedNotes.contains(note)
+
+    override fun addToSelected(note: NoteEntity) {
+        selectedNotes.add(note)
+    }
+
+    override fun removeFromSelected(note: NoteEntity) {
+        selectedNotes.remove(note)
+    }
+
     private fun addSampleData(): Boolean {
         viewModel.addSampleData()
         return true
@@ -137,8 +170,8 @@ class MainFragment : Fragment(), NotesListAdapter.ItemClickListener {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (this::adapter.isInitialized) {
-            outState.putParcelableArrayList(SELECTED_LIST_KEY, adapter.selectedNotes)
+        if (::groupAdapter.isInitialized) {
+            outState.putParcelableArrayList(SELECTED_LIST_KEY, selectedNotes)
         }
         super.onSaveInstanceState(outState)
     }

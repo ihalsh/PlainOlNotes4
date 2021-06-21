@@ -3,11 +3,39 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/drawable/ic_add.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/drawable/ic_check.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/drawable/ic_delete.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/drawable/ic_light1.xml" value="0.4" />
         <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/layout/activity_main.xml" value="0.4390625" />
         <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/layout/editor_fragment.xml" value="0.4390625" />
         <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/layout/list_item.xml" value="0.4390625" />
         <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/layout/main_fragment.xml" value="0.4" />
         <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/menu/main_menu.xml" value="0.4390625" />
+        <entry key="..\:/Android/Jetpack ComposeTutorial/PlainOlNotes4/app/src/main/res/menu/main_menu_items_selected.xml" value="0.4390625" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_add.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_check.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_delete.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network.xml" value="0.4" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network2.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network3.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network4.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network5.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_no_network6.xml" value="0.536" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_note.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error10.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error11.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error2.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error3.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error4.xml" value="0.6" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error5.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error6.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error7.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error8.xml" value="0.4552083333333333" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/drawable/ic_system_error9.xml" value="0.6" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/layout/editor_fragment.xml" value="0.4" />
+        <entry key="..\:/Android/PlainOlNotes4/app/src/main/res/layout/list_item.xml" value="0.1" />
       </map>
     </option>
   </component>

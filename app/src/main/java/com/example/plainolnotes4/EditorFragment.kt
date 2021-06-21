@@ -83,7 +83,7 @@ class EditorFragment : Fragment() {
             .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
 
-        viewModel.currentNote.value?.text = binding.editor.text.toString().trim()
+        viewModel.currentNote.value.text = binding.editor.text.toString().trim()
         viewModel.updateCurrentNote()
 
         findNavController().navigateUp()
